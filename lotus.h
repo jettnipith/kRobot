@@ -165,8 +165,8 @@ void spin_l_to_line(int speed) {
 
 void spin_r_to_line(int speed) {
   run(0, 0);
-  delay(30);
-  run(constrain(_biasL + speed + 49, -255, 255), constrain(_biasR - speed, -255, 255));
+  delay(10);
+  run(constrain(_biasL + speed, -255, 255), constrain(_biasR - speed, -255, 255));
   delay(100);
   getSensorValues();
   while (_frontValues[3] > _frontThreshold[3]) {
@@ -205,7 +205,7 @@ void spin_r(int timeLimiter) {
   run(0, 0);
 }
 
-void fw_no_line(int timeLimiter){
+void fw_no_line(int timeLimiter) {
   unsigned long startTime = millis();
   int speed = 128;
   while (millis() - startTime < timeLimiter) {
@@ -218,7 +218,7 @@ void fw_no_line(int timeLimiter){
   run(0, 0);
 }
 
-void bw_no_line(int timeLimiter){
+void bw_no_line(int timeLimiter) {
   unsigned long startTime = millis();
   int speed = 128;
   while (millis() - startTime < timeLimiter) {
@@ -260,7 +260,7 @@ void fw(int timeLimiter, int speed, String detector, String action) {
     delay(1);
     if (detector == "p") continue;
     if (detector == "f" && millis() - startTime > detectionDelay) {
-      if ((_frontValues[0] < _frontThreshold[0] && _frontValues[1] < _frontThreshold[1] && _frontValues[2] < _frontThreshold[2]) || (_frontValues[2] < _frontThreshold[2] &&_frontValues[3] < _frontThreshold[3] && _frontValues[4] < _frontThreshold[4])) {
+      if ((_frontValues[0] < _frontThreshold[0] && _frontValues[1] < _frontThreshold[1] && _frontValues[2] < _frontThreshold[2]) || (_frontValues[2] < _frontThreshold[2] && _frontValues[3] < _frontThreshold[3] && _frontValues[4] < _frontThreshold[4])) {
 
         if (action == "s") {
           //BREAK
@@ -269,21 +269,32 @@ void fw(int timeLimiter, int speed, String detector, String action) {
           run(constrain(_biasL - _baseSpeed, -255, 255), constrain(_biasR - _baseSpeed, -255, 255));
           delay(60);
           run(0, 0);
+
+          getSensorValues();
+          while (_frontValues[2] < _frontThreshold[2]) {
+            getSensorValues();
+            run(_baseSpeed, _baseSpeed);
+          }
+          run(0, 0);
         } else if (action == "l") {
           //BREAK
           run(0, 0);
           delay(10);
-          run(constrain(_biasL - _baseSpeed, -255, 255), constrain(_biasR - _baseSpeed, -255, 255));
-          delay(60);
-          run(0, 0);
+          getSensorValues();
+          while (_frontValues[2] < _frontThreshold[2]) {
+            getSensorValues();
+            run(_baseSpeed, _baseSpeed);
+          }
           spin_l_to_line(157);
         } else if (action == "r") {
           //BREAK
           run(0, 0);
           delay(10);
-          run(constrain(_biasL - _baseSpeed, -255, 255), constrain(_biasR - _baseSpeed, -255, 255));
-          delay(60);
-          run(0, 0);
+          getSensorValues();
+          while (_frontValues[2] < _frontThreshold[2]) {
+            getSensorValues();
+            run(_baseSpeed, _baseSpeed);
+          }
           spin_r_to_line(157);
         }
         break;
@@ -297,7 +308,6 @@ void obj_release() {
   delay(200);
   gServoArm.write(90);  //น้อย >> ลง
   delay(200);
-
 }
 
 void obj_prepare() {
