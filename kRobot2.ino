@@ -1,20 +1,31 @@
-#include "lotus.h"
+#include "lotus-line-sonic.h"
+
 
 void setup() {
   Serial.begin(115200);
+
+  pinMode(_MUX_S0, OUTPUT);
+  pinMode(_MUX_S1, OUTPUT);
+  pinMode(_MUX_S2, OUTPUT);
+  pinMode(_MUX_SIG, INPUT);
+
+  analogSetWidth(12);
+  analogSetPinAttenuation(_MUX_SIG, ADC_11db);
+
+  Serial.println("ESP32 + CD4051BM ready");
+
   OLED.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // กำหนดแอดเดรสของพอร์ตจอเป็น 0x3C (for the 128x64)
   //pinMode(BUTTON_PIN, INPUT_PULLUP);       // Calibration button
   pinMode(27, INPUT);  // กำหนดขา 27 เป็น input
 
-  gServoArm.attach(32, 500, 2400);
-  gServoCraw.attach(33, 500, 2400);
+  gServoArm.attach(33, 500, 2400);
+  gServoCraw.attach(5, 500, 2400);
   pinMode(_DL1, OUTPUT);
   pinMode(_DL2, OUTPUT);
   pinMode(_PWML, OUTPUT);
   pinMode(_DR1, OUTPUT);
   pinMode(_DR2, OUTPUT);
   pinMode(_PWMR, OUTPUT);
-
   tone(18, 660, 100);
   show4lines("Calibrating front..", "", "place front on black", "", "", "", "", "");
   wait_SW1();
@@ -22,33 +33,32 @@ void setup() {
   show4lines("Calibrating front..", "", "place front on white", "", "", "", "", "");
   wait_SW1();
   calibrateFrontSensors();
-  show4lines("Front Treshold", "", String(_frontThreshold[0]), String(_frontThreshold[1]), String(_frontThreshold[2]), String(_frontThreshold[3]), String(_frontThreshold[4]), "");
+  show4lines("Front Treshold", "", String(_frontThreshold[0]) + " " + String(_frontThreshold[1]), String(_frontThreshold[2]) + " " + String(_frontThreshold[3]), String(_frontThreshold[4]) + " " + String(_frontThreshold[5]), String(_frontThreshold[6]) + " " + String(_frontThreshold[7]), "", "");
   wait_SW1_done();
   delay(1000);
-  //อย่าลืมวัดแสงแล้วตั้งค่าแบ่งสีตรงนี้ด้วย
-  fixFrontThreshold(2000, 2000, 2000, 403, 2000);
+  fixFrontThreshold(1900, 1900, 1900, 1900, 1900, 1900, 1900, 1900);
   _kp = 0.0125;
+  const int speed_fast = 128;  //ตั้งค่าความเร็วที่ใช้วิ่งเร็ว
+  const int speed_slow = 62;   //ตั้งค่าความเร็วที่ใช้วิ่งช้า
 
   //---------------------------------------เริ่ม Code ตรงนี้---------------------------------------
-  obj_prepare();             //กางมือเพื่อเตรียมจับ
-  fw(20000, 148, "f", "l");  //เดินหน้าตามเส้น 20 วินาที ด้วยความเร็ว 178 ใช้เซนเซอน์หน้าเพื่อนับแยก เมื่อเจอแยกให้หยุดแม้เวลาไม่หมดก็ตาม
-  fw(20000, 72, "f", "s");   //เดินช้าเข้าไปจับ
-  obj_catch();               //จับวัตถุ */
-  spin_l_to_line(200);
-  fw(20000, 72, "f", "r");
-  fw(20000, 72, "f", "l");
-  fw(20000, 72, "f", "r");
-  fw(20000, 72, "f", "l");
 
-  //spin_l_to_line(128);//เลี้ยวซ้ายจนกว่าจะเข้าเส้นอีกครั้ง
-  //fw(20000,128,"f", "s");//เดินหน้าตามเส้น 20 วินาที ด้วยความเร็ว 128 ใช้เซนเซอน์หน้าเพื่อนับแยก เมื่อเจอแยกให้หยุดแม้เวลาไม่หมดก็ตาม
-  //obj_release(); //ปล่อยวัตถุ */
+  obj_prepare();
+  fw(20000, speed_slow, "f", "l");
+  fw(20000, speed_slow, "f", "s");
+  obj_catch();
+  spin_l_to_line(109);
+  fw(20000, speed_slow, "f", "r");
+  fw(20000, speed_slow, "f", "l");
+
+
 
   //---------------------------------------จบการทำงาน---------------------------------------
   run(0, 0);
 }
 
 void loop() {
+
   getSensorValues();
-  show4lines(String(_frontValues[0]), String(_frontValues[1]), String(_frontValues[2]), String(_frontValues[3]), String(_frontValues[4]), "", "", "");
+  show4lines(String(_frontValues[0]), String(_frontValues[1]), String(_frontValues[2]), String(_frontValues[3]), String(_frontValues[4]), String(_frontValues[5]), String(_frontValues[6]), String(_frontValues[7]));
 }
