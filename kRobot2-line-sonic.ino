@@ -33,32 +33,32 @@ void setup() {
   show4lines("Calibrating front..", "", "place front on white", "", "", "", "", "");
   wait_SW1();
   calibrateFrontSensors();
-  show4lines("Front Treshold", "", String(_frontThreshold[0]) + " " + String(_frontThreshold[1]), String(_frontThreshold[2]) + " " + String(_frontThreshold[3]), String(_frontThreshold[4]) + " " + String(_frontThreshold[5]), String(_frontThreshold[6]) + " " + String(_frontThreshold[7]), "", "");
+  show4lines("Front Treshold", "", String(_frontThreshold[0])+" "+ String(_frontThreshold[1]), String(_frontThreshold[2])+" "+ String(_frontThreshold[3]), String(_frontThreshold[4])+" "+ String(_frontThreshold[5]), String(_frontThreshold[6])+" "+ String(_frontThreshold[7]), "", "");
   wait_SW1_done();
   delay(1000);
-  fixFrontThreshold(1900, 1900, 1900, 1900, 1900, 1900, 1900, 1900);
+  fixFrontThreshold(1981,1994,2011,1981,1988,1996,2013,1977);
   _kp = 0.0125;
-  const int speed_fast = 128;  //ตั้งค่าความเร็วที่ใช้วิ่งเร็ว
-  const int speed_slow = 62;   //ตั้งค่าความเร็วที่ใช้วิ่งช้า
-
+  _speed_fast = 100;
+  _speed_slow = 69;
   //---------------------------------------เริ่ม Code ตรงนี้---------------------------------------
-
   obj_prepare();
-  fw(20000, speed_slow, "f", "l");
-  fw(20000, speed_slow, "f", "s");
+  fw(20000,_speed_fast,"f", "l");
+  fw(20000,_speed_slow ,"f", "s" );
+
   obj_catch();
-  spin_l_to_line(109);
-  fw(20000, speed_slow, "f", "r");
-  fw(20000, speed_slow, "f", "l");
-
-
-
+  spin_l_to_line(128);
+    fw(20000,_speed_slow ,"f", "r" );
+    fw(20000,_speed_slow ,"f", "l" );
+    fw(20000,_speed_slow ,"f", "r" );
+    fw(20000,_speed_slow ,"f", "l" );
+  //fw(20000,128,"f", "s");
+  //obj_release();
+  run(0,0);
   //---------------------------------------จบการทำงาน---------------------------------------
-  run(0, 0);
 }
 
 void loop() {
-
-  getSensorValues();
-  show4lines(String(_frontValues[0]), String(_frontValues[1]), String(_frontValues[2]), String(_frontValues[3]), String(_frontValues[4]), String(_frontValues[5]), String(_frontValues[6]), String(_frontValues[7]));
+  
+  //getSensorValues();
+  show4lines(String(_frontValues[0]),String(_frontValues[1]),String(_frontValues[2]),String(_frontValues[3]),String(_frontValues[4]),String(_frontValues[5]),String(_frontValues[6]),String(_frontValues[7]));
 }
