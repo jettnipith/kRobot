@@ -238,7 +238,7 @@ void bw_no_line(int timeLimiter) {
 void PIDforward() {
   int linePosition = getLinePosition();  // Position from the sensor array
   float error = 2000 - linePosition;     // Target position is center (4000) for 8 sensors
-
+  if (error == 0) _integral = 0;
   _integral += error;
   float derivative = error - _previousError;
 
