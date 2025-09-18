@@ -238,7 +238,7 @@ void PIDforward() {
 
   _integral += error;
   float derivative = error - _previousError;
-
+  if (error == 0) integral = 0;
   float correction = _kp * error + _ki * _integral + _kd * derivative;
   _previousError = error;
 
