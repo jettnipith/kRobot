@@ -34,6 +34,8 @@ int _frontValues[8];
 int _frontThreshold[8];
 
 int _baseSpeed = 110;  // Set your base speed here (range 0-255, adjust as needed)
+int _speed_fast = 166;
+int _speed_slow = 89;
 int _biasL = 0;
 int _biasR = 0;
 
@@ -309,10 +311,10 @@ void fw(int timeLimiter, int speed, String detector, String action) {
           run(0, 0);
 
           getSensorValues();
-          while (_frontValues[3] < _frontThreshold[3] || _frontValues[4] < _frontThreshold[4]) {
+          while (_frontValues[2] < _frontThreshold[2] || _frontValues[3] < _frontThreshold[3] || _frontValues[4] < _frontThreshold[4] || _frontValues[5] < _frontThreshold[5] || _frontValues[7] < _frontThreshold[7]) {
             getSensorValues();
-            run(62, 62);
-            delay(100);
+            run(_speed_slow, _speed_slow);
+            delay(50);
           } 
           run(0, 0);
         } else if (action == "l") {
@@ -323,10 +325,10 @@ void fw(int timeLimiter, int speed, String detector, String action) {
           delay(60); 
           run(0, 0);
           getSensorValues();
-          while (_frontValues[1] < _frontThreshold[1] || _frontValues[2] < _frontThreshold[2] || _frontValues[4] < _frontThreshold[4]) {
+          while (_frontValues[2] < _frontThreshold[2] || _frontValues[3] < _frontThreshold[3] || _frontValues[4] < _frontThreshold[4] || _frontValues[5] < _frontThreshold[5] || _frontValues[7] < _frontThreshold[7]) {
             getSensorValues();
-            run(62, 62);
-            delay(500);
+            run(_speed_slow, _speed_slow);
+            delay(50);
           }
           //run(constrain(_biasL - _baseSpeed, -255, 255), constrain(_biasR - _baseSpeed, -255, 255));
           //delay(60);
@@ -340,10 +342,10 @@ void fw(int timeLimiter, int speed, String detector, String action) {
           delay(60);
           run(0, 0);
           getSensorValues();
-          while (_frontValues[3] < _frontThreshold[3] || _frontValues[4] < _frontThreshold[4]) {
+          while (_frontValues[2] < _frontThreshold[2] || _frontValues[3] < _frontThreshold[3] || _frontValues[4] < _frontThreshold[4] || _frontValues[5] < _frontThreshold[5] || _frontValues[7] < _frontThreshold[7]) {
             getSensorValues();
-            run(62, 62);
-            delay(200);
+            run(_speed_slow, _speed_slow);
+            delay(50);
           }
           spin_r_to_line(157);
         }
