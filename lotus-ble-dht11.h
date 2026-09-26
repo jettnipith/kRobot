@@ -182,6 +182,7 @@ void init_dht11(int dht_pin){
   dht.setup(dht_pin, DHTesp::DHT11);
 }
 void init_robot() {
+  Serial.begin(115200);
   pinMode(27, INPUT);  // กำหนดขา 27 เป็น input
   pinMode(_DL1, OUTPUT);
   pinMode(_DL2, OUTPUT);
