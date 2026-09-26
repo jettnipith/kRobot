@@ -2,7 +2,7 @@
 
 void setup() {
   Serial.begin(115200);
-  init_hardware();
+  init_robot();
   tone(18, 660, 100);
   show4lines("Calibrating front..", "", "place front on black", "", "", "", "", "");
   wait_SW1();
