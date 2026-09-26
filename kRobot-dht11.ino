@@ -1,7 +1,7 @@
 #include "lotus.h"
 
 void setup() {
-  Serial.begin(115200);
+  
   init_robot();
   init_dht11(23);
   tone(18, 660, 100);
